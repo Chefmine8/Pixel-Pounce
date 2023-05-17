@@ -1,4 +1,15 @@
+# decort.py
+
 import pygame
 
-def obstacle(screen, self):
-    self.obstacle = pygame.draw.rect(screen, (0, 0, 255), [0, 700, 1220, 20], 0)
+
+def background(screen):
+    image = pygame.image.load("./img/background.png")
+    scaled_image = pygame.transform.scale(image, (1220, 720))
+    screen.blit(scaled_image, (0, 0))
+
+
+def sol(screen):
+    image = pygame.image.load("./img/Platform.png")
+    scaled_image = pygame.transform.scale(image, (1220, 720))
+    screen.blit(scaled_image, (0, 0))

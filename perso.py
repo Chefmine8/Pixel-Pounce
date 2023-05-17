@@ -1,6 +1,9 @@
+# perso.py
+
 import pygame
 
-def perso(screen, obstacle, self):
-    self.personnage = pygame.draw.circle(screen, (0, 255, 0), [300, 300], 20, 0)
 
-    print(self.personnage.colliderect(self.obstacle))
+def perso(screen, x, y, face):
+    image = pygame.image.load(face)
+    scaled_image = pygame.transform.scale(image, (72, 105))
+    screen.blit(scaled_image, (x, y))

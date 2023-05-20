@@ -3,16 +3,18 @@
 import pygame
 from perso import perso
 from decort import background
-from decort import sol
 
+def sol(screen, sol_y):
+    image = pygame.image.load("./img/Platform_test_layer_1.png")
+    scaled_image = pygame.transform.scale(image, (1220, 61))
+    screen.blit(scaled_image, (0, sol_y))
+def check_collision(perso_x, perso_y, sol_y):
+    if perso_x < 200 and perso_x > 100:
+        return False
 
-def check_collision(perso_x, perso_y):
     # Position de l'objet collision
-    collision_x = 0
-    collision_y = 720 - 65
-
     perso_rect = pygame.Rect(perso_x, perso_y, 72, 105)
-    collision_rect = pygame.Rect(collision_x, collision_y, 1220, 65)
+    collision_rect = pygame.Rect(perso_x, sol_y, 1220, 65)
     return perso_rect.colliderect(collision_rect)
 
 
@@ -21,6 +23,8 @@ def start_first_level():
     face = "./img/perso/walk/Char_1.png"
     width = 1220
     height = 720
+    sol_y = height - 65
+    jumpe = True
 
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Pixel Pounce")
@@ -35,30 +39,38 @@ def start_first_level():
             if event.type == pygame.QUIT:
                 running = False
 
+        if perso_y >= 720:
+            running = False
+        falling = True
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
             if jumpe == False:
                 face = "./img/perso/walk/Char_1.png"
+            else:
+                face = "./img/perso/Jump/Char_4.png"
             perso_x += speed
         if keys[pygame.K_LEFT]:
             if jumpe == False:
                 face = "./img/perso/walk/Char_2.png"
+            else:
+                face = "./img/perso/Jump/Char_2.png"
             perso_x -= speed
 
-        if keys[pygame.K_UP]:
-            falling = True
-            jumpe = True
-            face = "./img/perso/Jump/Char_3.png"
-            perso_y -= 20
-            pygame.time.wait(10)
-            face = "./img/perso/Jump/Char_4.png"
-            perso_y -= 20
+        if jumpe != True:
+            if keys[pygame.K_UP]:
+                falling = True
+                jumpe = True
+                face = "./img/perso/Jump/Char_3.png"
+                perso_y -= 50
+                pygame.time.wait(50)
+                face = "./img/perso/Jump/Char_4.png"
+                perso_y -= 50
 
         screen.fill((255, 255, 255))  # Fond blanc pour la première fenêtre du niveau
         background(screen)
-        sol(screen)
+        sol(screen, sol_y)
 
-        if check_collision(perso_x, perso_y):
+        if check_collision(perso_x, perso_y, sol_y):
             falling = False # Arrêt de la descente du personnage
             jumpe = False
 
@@ -66,7 +78,10 @@ def start_first_level():
         perso(screen, perso_x, perso_y, face)  # Affichage du personnage à sa position actuelle
 
         if falling:  # Déplacement vertical du personnage si la descente continue
-            perso_y += 5
+            if jumpe == False:
+                perso_y += 20
+            else:
+                perso_y += 3
 
         pygame.display.flip()
 
